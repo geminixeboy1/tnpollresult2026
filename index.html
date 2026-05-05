@@ -1,0 +1,354 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamil Nadu 2026 Assembly Election Results | Interactive Dashboard</title>
+<meta name="description" content="Complete interactive dashboard for Tamil Nadu 2026 Legislative Assembly Election Results — 234 constituencies, party seats, vote share, margins and NOTA analysis.">
+<meta name="keywords" content="Tamil Nadu 2026 election results, TN assembly election 2026, TVK seats, DMK AIADMK results, constituency wise Tamil Nadu 2026">
+<meta property="og:title" content="Tamil Nadu 2026 Election Results – Interactive Dashboard">
+<meta property="og:description" content="All 234 constituency results with party scorecard, vote share, margins and NOTA. Fully interactive, filter by party or search any seat.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Tamil Nadu 2026 Assembly Election Results","description":"Complete results for all 234 Tamil Nadu constituencies 2026"}</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;background:#080c18;color:#dde4f0}
+#app{display:grid;width:100vw;height:100vh;grid-template-rows:52px 1fr 1fr;gap:0}
+/* HEADER */
+header{background:#0d1226;border-bottom:1px solid #1e2a48;display:flex;align-items:center;padding:0 12px;gap:10px;flex-shrink:0}
+.logo{font-size:14px;font-weight:800;color:#f8fafc;white-space:nowrap;letter-spacing:-.3px}
+.logo em{color:#f59e0b;font-style:normal}
+.kpis{display:flex;gap:5px;flex:1}
+.kpi{background:#111827;border:1px solid #1e2d4a;border-radius:5px;padding:3px 9px;display:flex;flex-direction:column;align-items:center}
+.kpi b{font-size:15px;font-weight:800;line-height:1.15}
+.kpi s{font-size:8.5px;color:#7a8fb0;text-transform:uppercase;letter-spacing:.5px;font-style:normal;text-decoration:none;display:block}
+.filters{display:flex;gap:5px;align-items:center;margin-left:auto}
+input,select{background:#111827;border:1px solid #1e2d4a;color:#dde4f0;border-radius:4px;padding:3px 7px;font-size:11px;outline:none}
+input:focus,select:focus{border-color:#3b4f80}
+/* GRID */
+.row{display:grid;gap:5px;padding:5px 6px}
+.row1{grid-template-columns:220px 1fr 210px}
+.row2{grid-template-columns:1fr 1fr 1fr;padding-top:0}
+/* PANELS */
+.panel{background:#0d1226;border:1px solid #1a2540;border-radius:7px;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.ph{background:#111827;padding:5px 9px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a2540;flex-shrink:0}
+.ph h3{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:#7a8fb0}
+.pb{flex:1;overflow:hidden;min-height:0;padding:5px}
+/* SCORE LIST */
+.slist{overflow-y:auto;height:100%}
+.srow{display:flex;align-items:center;gap:5px;padding:3px 7px;border-bottom:1px solid #111827;cursor:default}
+.srow:hover{background:#111827}
+.sdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sname{font-size:10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sbar-w{width:55px;height:5px;background:#1a2540;border-radius:3px;overflow:hidden;flex-shrink:0}
+.sbar{height:100%;border-radius:3px}
+.sseats{font-size:13px;font-weight:800;width:28px;text-align:right;flex-shrink:0}
+/* TABLE */
+.tscroll{overflow-y:auto;height:100%}
+table{width:100%;border-collapse:collapse;font-size:10px}
+th{background:#111827;padding:4px 6px;text-align:left;font-size:9px;text-transform:uppercase;color:#5a6f90;position:sticky;top:0;cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{color:#a0b4d0}
+td{padding:3px 6px;border-bottom:1px solid #111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0}
+td:nth-child(1){width:28px}
+td:nth-child(2){max-width:130px;width:130px}
+td:nth-child(3){max-width:120px;width:120px}
+td:nth-child(4){width:68px}
+td:nth-child(5),td:nth-child(6),td:nth-child(7),td:nth-child(8){width:65px;text-align:right}
+tr:hover td{background:#111827}
+.badge{display:inline-block;padding:1px 4px;border-radius:3px;font-size:8.5px;font-weight:700}
+/* TABS */
+.tabs{display:flex;gap:3px}
+.tab{background:#1a2540;border:1px solid #253560;color:#7a8fb0;border-radius:3px;padding:1px 7px;font-size:9px;cursor:pointer}
+.tab.on{background:#2d3f70;color:#dde4f0;border-color:#3d5090}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="logo">TN 2026 <em>Elections</em></div>
+  <div class="kpis">
+    <div class="kpi"><b style="color:#7c3aed">108</b><s>TVK Seats</s></div>
+    <div class="kpi"><b style="color:#dc2626">59</b><s>DMK Seats</s></div>
+    <div class="kpi"><b style="color:#16a34a">47</b><s>AIADMK Seats</s></div>
+    <div class="kpi"><b style="color:#2563eb">5</b><s>INC Seats</s></div>
+    <div class="kpi"><b style="color:#0891b2">4</b><s>PMK Seats</s></div>
+    <div class="kpi"><b style="color:#ea580c">1</b><s>BJP Seats</s></div>
+    <div class="kpi"><b style="color:#94a3b8">234</b><s>Total Seats</s></div>
+    <div class="kpi"><b style="color:#34d399">~5.2Cr</b><s>Total Votes</s></div>
+  </div>
+  <div class="filters">
+    <input type="text" id="srch" placeholder="Search constituency / candidate…" style="width:170px">
+    <select id="pf"><option value="">All Parties</option></select>
+    <select id="mf">
+      <option value="">Any Margin</option>
+      <option value="0-5000">Tight &lt;5K</option>
+      <option value="5000-20000">Close 5K–20K</option>
+      <option value="20000-50000">Medium 20K–50K</option>
+      <option value="50000-999999">Large 50K+</option>
+    </select>
+  </div>
+</header>
+
+<div class="row row1">
+  <div class="panel">
+    <div class="ph"><h3>Party Scorecard</h3></div>
+    <div class="pb" style="padding:0"><div class="slist" id="scoreList"></div></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><h3>Constituency Results</h3><span style="font-size:9px;color:#5a6f90" id="rcount">234 seats</span></div>
+    <div class="pb" style="padding:0">
+      <div class="tscroll">
+        <table>
+          <thead><tr>
+            <th onclick="ST('n')">#</th>
+            <th onclick="ST('c')">Constituency ↕</th>
+            <th onclick="ST('w')">Winner</th>
+            <th onclick="ST('p')">Party</th>
+            <th onclick="ST('wv')">Votes</th>
+            <th onclick="ST('ws')">Share%</th>
+            <th onclick="ST('m')">Margin</th>
+            <th onclick="ST('nota')">NOTA</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><h3>Vote Share by Party</h3></div>
+    <div class="pb"><canvas id="cvDonut"></canvas></div>
+  </div>
+</div>
+
+<div class="row row2">
+  <div class="panel">
+    <div class="ph"><h3>Seats Won</h3></div>
+    <div class="pb"><canvas id="cvSeats"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="ph">
+      <h3>Winning Margins (Top 10)</h3>
+      <div class="tabs">
+        <button class="tab on" id="tbH" onclick="switchM('top')">Highest</button>
+        <button class="tab" id="tbL" onclick="switchM('low')">Tightest</button>
+      </div>
+    </div>
+    <div class="pb"><canvas id="cvMargin"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="ph">
+      <h3>Analysis</h3>
+      <div class="tabs">
+        <button class="tab on" id="tbN" onclick="switchA('nota')">NOTA%</button>
+        <button class="tab" id="tbP" onclick="switchA('postal')">Postal%</button>
+        <button class="tab" id="tbT" onclick="switchA('turnout')">Turnout</button>
+      </div>
+    </div>
+    <div class="pb"><canvas id="cvAnalysis"></canvas></div>
+  </div>
+</div>
+</div>
+<script>
+const RAW=[{"n":1,"c":"GUMMIDIPOONDI","w":"S.VIJAYAKUMAR","p":"Tamilaga Vettri Kazhagam","wv":94320,"ws":40.56,"m":27945,"tv":232522,"nota":937,"notas":0.4,"evm":93820,"post":500,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":66375},{"n":2,"c":"PONNERI","w":"DR.RAVI.M.S","p":"Tamilaga Vettri Kazhagam","wv":110439,"ws":48.69,"m":55768,"tv":226819,"nota":865,"notas":0.38,"evm":110051,"post":388,"r2":"Indian National Congress","r2v":54671},{"n":3,"c":"TIRUTTANI","w":"G.HARI","p":"All India Anna Dravida Munnetra Kazhagam","wv":89169,"ws":37.34,"m":5793,"tv":238798,"nota":1210,"notas":0.51,"evm":87893,"post":1276,"r2":"Tamilaga Vettri Kazhagam","r2v":83376},{"n":4,"c":"THIRUVALLUR","w":"DR. T. ARUNKUMAR","p":"Tamilaga Vettri Kazhagam","wv":92190,"ws":40.71,"m":24760,"tv":226428,"nota":1132,"notas":0.5,"evm":91683,"post":507,"r2":"Dravida Munnetra Kazhagam","r2v":67430},{"n":5,"c":"POONAMALLEE","w":"PRAKASAM.R","p":"Tamilaga Vettri Kazhagam","wv":161309,"ws":52.22,"m":72740,"tv":308894,"nota":1571,"notas":0.51,"evm":160643,"post":666,"r2":"Dravida Munnetra Kazhagam","r2v":88569},{"n":6,"c":"AVADI","w":"R.RAMESH KUMAR","p":"Tamilaga Vettri Kazhagam","wv":180384,"ws":52.13,"m":76311,"tv":346005,"nota":1533,"notas":0.44,"evm":179472,"post":912,"r2":"Dravida Munnetra Kazhagam","r2v":104073},{"n":7,"c":"MADURAVOYAL","w":"RHEVANTH CHARAN","p":"Tamilaga Vettri Kazhagam","wv":141725,"ws":48.26,"m":61509,"tv":293692,"nota":1462,"notas":0.5,"evm":141423,"post":302,"r2":"Dravida Munnetra Kazhagam","r2v":80216},{"n":8,"c":"AMBATTUR","w":"BALAMURUGAN.G","p":"Tamilaga Vettri Kazhagam","wv":133339,"ws":51.29,"m":58781,"tv":259986,"nota":1490,"notas":0.57,"evm":132995,"post":344,"r2":"Dravida Munnetra Kazhagam","r2v":74558},{"n":9,"c":"MADAVARAM","w":"M.L.VIJAYPRABHU","p":"Tamilaga Vettri Kazhagam","wv":190462,"ws":52.61,"m":94985,"tv":361998,"nota":1394,"notas":0.39,"evm":189784,"post":678,"r2":"Dravida Munnetra Kazhagam","r2v":95477},{"n":10,"c":"THIRUVOTTIYUR","w":"SENTHIL KUMAR. N","p":"Tamilaga Vettri Kazhagam","wv":110067,"ws":53.15,"m":53564,"tv":207088,"nota":805,"notas":0.39,"evm":109788,"post":279,"r2":"Communist Party of India (Marxist)","r2v":56503},{"n":11,"c":"DR.RADHAKRISHNAN NAGAR","w":"N. MARIE WILSON","p":"Tamilaga Vettri Kazhagam","wv":97800,"ws":53.97,"m":49668,"tv":181206,"nota":561,"notas":0.31,"evm":97529,"post":271,"r2":"Dravida Munnetra Kazhagam","r2v":48132},{"n":12,"c":"PERAMBUR","w":"C. JOSEPH VIJAY","p":"Tamilaga Vettri Kazhagam","wv":120365,"ws":58.89,"m":53715,"tv":204384,"nota":601,"notas":0.29,"evm":119785,"post":580,"r2":"Dravida Munnetra Kazhagam","r2v":66650},{"n":13,"c":"KOLATHUR","w":"V. S. BABU","p":"Tamilaga Vettri Kazhagam","wv":82997,"ws":45.09,"m":8795,"tv":184051,"nota":892,"notas":0.48,"evm":82614,"post":383,"r2":"Dravida Munnetra Kazhagam","r2v":74202},{"n":14,"c":"VILLIVAKKAM","w":"AADHAV ARJUNA","p":"Tamilaga Vettri Kazhagam","wv":66445,"ws":46.97,"m":17302,"tv":141452,"nota":695,"notas":0.49,"evm":66149,"post":296,"r2":"Dravida Munnetra Kazhagam","r2v":49143},{"n":15,"c":"THIRU-VI-KA-NAGAR","w":"M. R. PALLAVI","p":"Tamilaga Vettri Kazhagam","wv":69125,"ws":48.04,"m":22333,"tv":143903,"nota":527,"notas":0.37,"evm":68768,"post":357,"r2":"Dravida Munnetra Kazhagam","r2v":46792},{"n":16,"c":"EGMORE","w":"RAJMOHAN","p":"Tamilaga Vettri Kazhagam","wv":53901,"ws":45.02,"m":10804,"tv":119738,"nota":695,"notas":0.58,"evm":53520,"post":381,"r2":"Dravida Munnetra Kazhagam","r2v":43097},{"n":17,"c":"ROYAPURAM","w":"K.V. VIJAY DAMU","p":"Tamilaga Vettri Kazhagam","wv":59091,"ws":46.4,"m":14249,"tv":127356,"nota":459,"notas":0.36,"evm":58710,"post":381,"r2":"Dravida Munnetra Kazhagam","r2v":44842},{"n":18,"c":"HARBOUR","w":"P K SEKARBABU","p":"Dravida Munnetra Kazhagam","wv":45254,"ws":45.43,"m":11750,"tv":99622,"nota":600,"notas":0.6,"evm":45073,"post":181,"r2":"Tamilaga Vettri Kazhagam","r2v":33504},{"n":19,"c":"CHEPAUK-THIRUVALLIKENI","w":"UDHAYANIDHI STALIN","p":"Dravida Munnetra Kazhagam","wv":62992,"ws":44.76,"m":7140,"tv":140741,"nota":643,"notas":0.46,"evm":62560,"post":432,"r2":"Tamilaga Vettri Kazhagam","r2v":55852},{"n":20,"c":"THOUSAND LIGHTS","w":"PRABHAKAR.J.C.D","p":"Tamilaga Vettri Kazhagam","wv":58965,"ws":44.73,"m":15141,"tv":131824,"nota":815,"notas":0.62,"evm":58545,"post":420,"r2":"Dravida Munnetra Kazhagam","r2v":43824},{"n":21,"c":"ANNA NAGAR","w":"V.K.RAMKUMAR","p":"Tamilaga Vettri Kazhagam","wv":71375,"ws":43.7,"m":21363,"tv":163339,"nota":963,"notas":0.59,"evm":70986,"post":389,"r2":"Dravida Munnetra Kazhagam","r2v":50012},{"n":22,"c":"VIRUGAMPAKKAM","w":"SABARINATHAN.R","p":"Tamilaga Vettri Kazhagam","wv":76092,"ws":44.03,"m":27086,"tv":172831,"nota":1030,"notas":0.6,"evm":75801,"post":291,"r2":"Dravida Munnetra Kazhagam","r2v":49006},{"n":23,"c":"SAIDAPET","w":"ARUL PRAKASAM. M","p":"Tamilaga Vettri Kazhagam","wv":81205,"ws":50.63,"m":28514,"tv":160401,"nota":924,"notas":0.58,"evm":80738,"post":467,"r2":"Dravida Munnetra Kazhagam","r2v":52691},{"n":24,"c":"THIYAGARAYANAGAR","w":"ANAND N","p":"Tamilaga Vettri Kazhagam","wv":51632,"ws":38.55,"m":13027,"tv":133928,"nota":878,"notas":0.66,"evm":51390,"post":242,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":38605},{"n":25,"c":"MYLAPORE","w":"VENKATARAMANAN. P","p":"Tamilaga Vettri Kazhagam","wv":70070,"ws":46.53,"m":28972,"tv":150594,"nota":770,"notas":0.51,"evm":69748,"post":322,"r2":"Dravida Munnetra Kazhagam","r2v":41098},{"n":26,"c":"VELACHERY","w":"KUMAR. R","p":"Tamilaga Vettri Kazhagam","wv":80430,"ws":43.52,"m":33305,"tv":184815,"nota":1336,"notas":0.72,"evm":80057,"post":373,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":47125},{"n":27,"c":"SHOZHINGANALLUR","w":"ECR P SARAVANAN","p":"Tamilaga Vettri Kazhagam","wv":220382,"ws":49.27,"m":96780,"tv":447295,"nota":2079,"notas":0.46,"evm":219807,"post":575,"r2":"Dravida Munnetra Kazhagam","r2v":123602},{"n":28,"c":"ALANDUR","w":"M.HARISH","p":"Tamilaga Vettri Kazhagam","wv":112205,"ws":42.9,"m":29609,"tv":261570,"nota":1263,"notas":0.48,"evm":111572,"post":633,"r2":"Dravida Munnetra Kazhagam","r2v":82596},{"n":29,"c":"SRIPERUMBUDUR","w":"THENNARASU.K","p":"Tamilaga Vettri Kazhagam","wv":147611,"ws":44.58,"m":54246,"tv":331088,"nota":1161,"notas":0.35,"evm":146950,"post":661,"r2":"Indian National Congress","r2v":93365},{"n":30,"c":"PALLAVARAM","w":"J.KAMATCHI","p":"Tamilaga Vettri Kazhagam","wv":133611,"ws":47.1,"m":54693,"tv":283677,"nota":1602,"notas":0.56,"evm":133119,"post":492,"r2":"Desiya Murpokku Dravida Kazhagam","r2v":78918},{"n":31,"c":"TAMBARAM","w":"D.SARATHKUMAR","p":"Tamilaga Vettri Kazhagam","wv":118967,"ws":42.67,"m":35621,"tv":278809,"nota":1512,"notas":0.54,"evm":118577,"post":390,"r2":"Dravida Munnetra Kazhagam","r2v":83346},{"n":32,"c":"CHENGALPATTU","w":"S. THIYAGARAJAN","p":"Tamilaga Vettri Kazhagam","wv":137136,"ws":42.32,"m":35641,"tv":324010,"nota":1395,"notas":0.43,"evm":136578,"post":558,"r2":"Dravida Munnetra Kazhagam","r2v":101495},{"n":33,"c":"THIRUPORUR","w":"B.VIJAYARAJ","p":"Tamilaga Vettri Kazhagam","wv":110095,"ws":41.96,"m":39351,"tv":262409,"nota":1248,"notas":0.48,"evm":109642,"post":453,"r2":"Viduthalai Chiruthaigal Katchi","r2v":70744},{"n":34,"c":"CHEYYUR","w":"RAJASEKAR. E","p":"All India Anna Dravida Munnetra Kazhagam","wv":63809,"ws":34.02,"m":5668,"tv":187584,"nota":783,"notas":0.42,"evm":62909,"post":900,"r2":"Tamilaga Vettri Kazhagam","r2v":58141},{"n":35,"c":"MADURANTAKAM","w":"MARAGATHAM KUMARAVEL.K","p":"All India Anna Dravida Munnetra Kazhagam","wv":69284,"ws":34.95,"m":7194,"tv":198251,"nota":797,"notas":0.4,"evm":68544,"post":740,"r2":"Tamilaga Vettri Kazhagam","r2v":62090},{"n":36,"c":"UTHIRAMERUR","w":"MUNIRATHINAM.J","p":"Tamilaga Vettri Kazhagam","wv":84917,"ws":37.28,"m":14223,"tv":227765,"nota":1114,"notas":0.49,"evm":83909,"post":1008,"r2":"Dravida Munnetra Kazhagam","r2v":70694},{"n":37,"c":"KANCHEEPURAM","w":"R.V. RANJITHKUMAR","p":"Tamilaga Vettri Kazhagam","wv":91350,"ws":37.09,"m":15488,"tv":246317,"nota":1078,"notas":0.44,"evm":90321,"post":1029,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":75862},{"n":38,"c":"ARAKKONAM","w":"V. GANDHIRAJ","p":"Tamilaga Vettri Kazhagam","wv":73776,"ws":40.46,"m":23121,"tv":182340,"nota":899,"notas":0.49,"evm":73358,"post":418,"r2":"Viduthalai Chiruthaigal Katchi","r2v":50655},{"n":39,"c":"SHOLINGUR","w":"G.KAPIL","p":"Tamilaga Vettri Kazhagam","wv":84506,"ws":36.16,"m":5686,"tv":233684,"nota":572,"notas":0.24,"evm":83856,"post":650,"r2":"Pattali Makkal Katchi","r2v":78820},{"n":40,"c":"KATPADI","w":"DR M SUDHAKAR","p":"Tamilaga Vettri Kazhagam","wv":69868,"ws":34.33,"m":5870,"tv":203497,"nota":745,"notas":0.37,"evm":69284,"post":584,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":63998},{"n":41,"c":"RANIPET","w":"THAHIRA","p":"Tamilaga Vettri Kazhagam","wv":91149,"ws":41.24,"m":5787,"tv":221038,"nota":1209,"notas":0.55,"evm":90728,"post":421,"r2":"Dravida Munnetra Kazhagam","r2v":85362},{"n":42,"c":"ARCOT","w":"S.M.SUKUMAR","p":"All India Anna Dravida Munnetra Kazhagam","wv":105608,"ws":46.77,"m":42720,"tv":225786,"nota":656,"notas":0.29,"evm":104696,"post":912,"r2":"Tamilaga Vettri Kazhagam","r2v":62888},{"n":43,"c":"VELLORE","w":"M.M.VINOTH KANNAN","p":"Tamilaga Vettri Kazhagam","wv":73032,"ws":38.33,"m":6777,"tv":190527,"nota":757,"notas":0.4,"evm":72563,"post":469,"r2":"Dravida Munnetra Kazhagam","r2v":66255},{"n":44,"c":"ANAIKATTU","w":"D.VELAZHAGAN","p":"All India Anna Dravida Munnetra Kazhagam","wv":76302,"ws":35.27,"m":7081,"tv":216318,"nota":1103,"notas":0.51,"evm":75629,"post":673,"r2":"Dravida Munnetra Kazhagam","r2v":69221},{"n":45,"c":"KILVAITHINANKUPPAM","w":"THENRAL KUMAR. E","p":"Tamilaga Vettri Kazhagam","wv":74305,"ws":39.13,"m":20255,"tv":189892,"nota":972,"notas":0.51,"evm":73649,"post":656,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":54050},{"n":46,"c":"GUDIYATTAM","w":"K.SINDU","p":"Tamilaga Vettri Kazhagam","wv":82858,"ws":36.17,"m":10097,"tv":229076,"nota":799,"notas":0.35,"evm":82474,"post":384,"r2":"Desiya Murpokku Dravida Kazhagam","r2v":72761},{"n":47,"c":"VANIYAMBADI","w":"SYED FAROOQ BASHA SSB","p":"Indian Union Muslim League","wv":73181,"ws":34.43,"m":2982,"tv":212534,"nota":624,"notas":0.29,"evm":72764,"post":417,"r2":"Tamilaga Vettri Kazhagam","r2v":70199},{"n":48,"c":"AMBUR","w":"VILWANATHAN. A.C.","p":"Dravida Munnetra Kazhagam","wv":74102,"ws":37.89,"m":7131,"tv":195584,"nota":468,"notas":0.24,"evm":73543,"post":559,"r2":"Tamilaga Vettri Kazhagam","r2v":66971},{"n":49,"c":"JOLARPET","w":"VEERAMANI K.C.","p":"All India Anna Dravida Munnetra Kazhagam","wv":78633,"ws":36.91,"m":16083,"tv":213042,"nota":695,"notas":0.33,"evm":77814,"post":819,"r2":"Tamilaga Vettri Kazhagam","r2v":62550},{"n":50,"c":"TIRUPPATTUR","w":"DR.THIRUPATHI. N","p":"Tamilaga Vettri Kazhagam","wv":105098,"ws":51.79,"m":48263,"tv":202925,"nota":464,"notas":0.23,"evm":104203,"post":895,"r2":"Dravida Munnetra Kazhagam","r2v":56835},{"n":51,"c":"UTHANGARAI","w":"N ELAIYARAJA","p":"Tamilaga Vettri Kazhagam","wv":70201,"ws":34.16,"m":5198,"tv":205530,"nota":881,"notas":0.43,"evm":69448,"post":753,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":65003},{"n":52,"c":"BARGUR","w":"E.C. GOVINDARASAN","p":"All India Anna Dravida Munnetra Kazhagam","wv":71240,"ws":33.3,"m":4241,"tv":213960,"nota":631,"notas":0.29,"evm":70298,"post":942,"r2":"Tamilaga Vettri Kazhagam","r2v":66999},{"n":53,"c":"KRISHNAGIRI","w":"MUKUNDHAN.P","p":"Tamilaga Vettri Kazhagam","wv":89374,"ws":38.83,"m":18844,"tv":230181,"nota":1136,"notas":0.49,"evm":88252,"post":1122,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":70530},{"n":54,"c":"VEPPANAHALLI","w":"SRINIVASAN.P.S","p":"Dravida Munnetra Kazhagam","wv":74691,"ws":33.55,"m":138,"tv":222608,"nota":1570,"notas":0.71,"evm":74147,"post":544,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":74553},{"n":55,"c":"HOSUR","w":"BALAKRISHNAREDDY. P","p":"All India Anna Dravida Munnetra Kazhagam","wv":109867,"ws":39.55,"m":27803,"tv":277770,"nota":1614,"notas":0.58,"evm":109047,"post":820,"r2":"Tamilaga Vettri Kazhagam","r2v":82064},{"n":56,"c":"THALLI","w":"RAMACHANDRAN. T","p":"Communist Party of India","wv":78283,"ws":38.02,"m":5240,"tv":205878,"nota":1550,"notas":0.75,"evm":77470,"post":813,"r2":"Bharatiya Janata Party","r2v":73043},{"n":57,"c":"PALACODU","w":"ANBALAGAN. K.P.","p":"All India Anna Dravida Munnetra Kazhagam","wv":102807,"ws":45.64,"m":39042,"tv":225257,"nota":1292,"notas":0.57,"evm":101533,"post":1274,"r2":"Tamilaga Vettri Kazhagam","r2v":63765},{"n":58,"c":"PENNAGARAM","w":"GAJENDRAN. S.","p":"Tamilaga Vettri Kazhagam","wv":81240,"ws":35.53,"m":3165,"tv":228666,"nota":674,"notas":0.29,"evm":80473,"post":767,"r2":"Pattali Makkal Katchi","r2v":78075},{"n":59,"c":"DHARMAPURI","w":"SOWMIYA ANBUMANI","p":"Pattali Makkal Katchi","wv":93713,"ws":39.28,"m":20896,"tv":238579,"nota":941,"notas":0.39,"evm":91469,"post":2244,"r2":"Tamilaga Vettri Kazhagam","r2v":72817},{"n":60,"c":"PAPPIREDDIPATTI","w":"MARAGATHAM VETRIVEL","p":"All India Anna Dravida Munnetra Kazhagam","wv":101829,"ws":43.03,"m":33114,"tv":236621,"nota":677,"notas":0.29,"evm":100096,"post":1733,"r2":"Dravida Munnetra Kazhagam","r2v":68715},{"n":61,"c":"HARUR","w":"SAMPATHKUMAR. V","p":"All India Anna Dravida Munnetra Kazhagam","wv":75523,"ws":34.32,"m":3329,"tv":220042,"nota":782,"notas":0.36,"evm":74063,"post":1460,"r2":"Dravida Munnetra Kazhagam","r2v":72194},{"n":62,"c":"CHENGAM","w":"S.VELU","p":"All India Anna Dravida Munnetra Kazhagam","wv":87802,"ws":36.15,"m":13278,"tv":242897,"nota":1114,"notas":0.46,"evm":86953,"post":849,"r2":"Tamilaga Vettri Kazhagam","r2v":74524},{"n":63,"c":"TIRUVANNAMALAI","w":"VELU. E.V","p":"Dravida Munnetra Kazhagam","wv":88273,"ws":40.11,"m":2455,"tv":220066,"nota":785,"notas":0.36,"evm":87271,"post":1002,"r2":"Tamilaga Vettri Kazhagam","r2v":85818},{"n":64,"c":"KILPENNATHUR","w":"RAMACHANDRAN.S","p":"All India Anna Dravida Munnetra Kazhagam","wv":90503,"ws":41.18,"m":30465,"tv":219790,"nota":440,"notas":0.2,"evm":89434,"post":1069,"r2":"Dravida Munnetra Kazhagam","r2v":60038},{"n":65,"c":"KALASAPAKKAM","w":"AGRI KRISHNAMURTHY. S S","p":"All India Anna Dravida Munnetra Kazhagam","wv":89629,"ws":41.86,"m":26740,"tv":214127,"nota":423,"notas":0.2,"evm":88576,"post":1053,"r2":"Dravida Munnetra Kazhagam","r2v":62889},{"n":66,"c":"POLUR","w":"ABISHEK. R","p":"Tamilaga Vettri Kazhagam","wv":67961,"ws":32.1,"m":227,"tv":211743,"nota":798,"notas":0.38,"evm":67203,"post":758,"r2":"Desiya Murpokku Dravida Kazhagam","r2v":67734},{"n":67,"c":"ARANI","w":"JAYASUDHA. L","p":"All India Anna Dravida Munnetra Kazhagam","wv":76735,"ws":33.34,"m":5631,"tv":230162,"nota":707,"notas":0.31,"evm":75881,"post":854,"r2":"Dravida Munnetra Kazhagam","r2v":71104},{"n":68,"c":"CHEYYAR","w":"MUKKUR N. SUBRAMANIAN","p":"All India Anna Dravida Munnetra Kazhagam","wv":86680,"ws":38.95,"m":21081,"tv":222570,"nota":950,"notas":0.43,"evm":85939,"post":741,"r2":"Tamilaga Vettri Kazhagam","r2v":65599},{"n":69,"c":"VANDAVASI","w":"AMBETHKUMAR. S","p":"Dravida Munnetra Kazhagam","wv":63805,"ws":33.37,"m":3333,"tv":191204,"nota":988,"notas":0.52,"evm":63011,"post":794,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":60472},{"n":70,"c":"GINGEE","w":"GANESHKUMAR A","p":"Pattali Makkal Katchi","wv":78201,"ws":36.1,"m":12645,"tv":216652,"nota":508,"notas":0.23,"evm":77324,"post":877,"r2":"Dravida Munnetra Kazhagam","r2v":65556},{"n":71,"c":"MAILAM","w":"SHANMUGAM C VE","p":"All India Anna Dravida Munnetra Kazhagam","wv":82353,"ws":43.52,"m":30041,"tv":189221,"nota":299,"notas":0.16,"evm":81436,"post":917,"r2":"Tamilaga Vettri Kazhagam","r2v":52312},{"n":72,"c":"TINDIVANAM","w":"VANNI ARASU","p":"Viduthalai Chiruthaigal Katchi","wv":63833,"ws":32.56,"m":734,"tv":196026,"nota":714,"notas":0.36,"evm":63094,"post":739,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":63099},{"n":73,"c":"VANUR","w":"GOWTHAM D","p":"Dravida Munnetra Kazhagam","wv":68873,"ws":35.85,"m":7034,"tv":192119,"nota":519,"notas":0.27,"evm":68418,"post":455,"r2":"Tamilaga Vettri Kazhagam","r2v":61839},{"n":74,"c":"VILUPPURAM","w":"LAKSHMANAN R","p":"Dravida Munnetra Kazhagam","wv":72982,"ws":33.88,"m":4119,"tv":215422,"nota":573,"notas":0.27,"evm":72041,"post":941,"r2":"Tamilaga Vettri Kazhagam","r2v":68863},{"n":75,"c":"VIKRAVANDI","w":"SIVAKUMAR C","p":"Pattali Makkal Katchi","wv":69727,"ws":33.33,"m":910,"tv":209231,"nota":401,"notas":0.19,"evm":69028,"post":699,"r2":"Tamilaga Vettri Kazhagam","r2v":68817},{"n":76,"c":"TIRUKKOYILUR","w":"PALANISAMY S","p":"All India Anna Dravida Munnetra Kazhagam","wv":73033,"ws":33.61,"m":285,"tv":217318,"nota":500,"notas":0.23,"evm":72347,"post":686,"r2":"Tamilaga Vettri Kazhagam","r2v":72748},{"n":77,"c":"ULUNDURPETTAI","w":"VASANTHAVEL G R","p":"Dravida Munnetra Kazhagam","wv":98471,"ws":36.34,"m":2277,"tv":271002,"nota":1051,"notas":0.39,"evm":97584,"post":887,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":96194},{"n":78,"c":"RISHIVANDIYAM","w":"KARTHIKEYAN K","p":"Dravida Munnetra Kazhagam","wv":89711,"ws":36.65,"m":4862,"tv":244795,"nota":534,"notas":0.22,"evm":88871,"post":840,"r2":"Tamilaga Vettri Kazhagam","r2v":84849},{"n":79,"c":"SANKARAPURAM","w":"RAKESH R","p":"All India Anna Dravida Munnetra Kazhagam","wv":80250,"ws":34.07,"m":3440,"tv":235528,"nota":383,"notas":0.16,"evm":79369,"post":881,"r2":"Dravida Munnetra Kazhagam","r2v":76810},{"n":80,"c":"KALLAKURICHI","w":"ARUL VIGNESH C","p":"Tamilaga Vettri Kazhagam","wv":81132,"ws":32.5,"m":798,"tv":249626,"nota":883,"notas":0.35,"evm":80572,"post":560,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":80334},{"n":81,"c":"GANGAVALLI","w":"NALLATHAMBI. A","p":"All India Anna Dravida Munnetra Kazhagam","wv":73167,"ws":37.2,"m":14404,"tv":196679,"nota":731,"notas":0.37,"evm":72152,"post":1015,"r2":"Dravida Munnetra Kazhagam","r2v":58763},{"n":82,"c":"ATTUR","w":"JAYASANKARAN. A.P.","p":"All India Anna Dravida Munnetra Kazhagam","wv":80843,"ws":38.81,"m":15318,"tv":208296,"nota":1031,"notas":0.49,"evm":79825,"post":1018,"r2":"Tamilaga Vettri Kazhagam","r2v":65525},{"n":83,"c":"YERCAUD","w":"USHARANI. P","p":"All India Anna Dravida Munnetra Kazhagam","wv":87772,"ws":34.61,"m":2189,"tv":253592,"nota":1250,"notas":0.49,"evm":86895,"post":877,"r2":"Tamilaga Vettri Kazhagam","r2v":85583},{"n":84,"c":"OMALUR","w":"MANI. R","p":"All India Anna Dravida Munnetra Kazhagam","wv":112246,"ws":41.4,"m":14539,"tv":271119,"nota":1433,"notas":0.53,"evm":110810,"post":1436,"r2":"Tamilaga Vettri Kazhagam","r2v":97707},{"n":85,"c":"METTUR","w":"VENKATACHALAM. G","p":"All India Anna Dravida Munnetra Kazhagam","wv":86498,"ws":37.43,"m":19105,"tv":231105,"nota":794,"notas":0.34,"evm":85347,"post":1151,"r2":"Dravida Munnetra Kazhagam","r2v":67393},{"n":86,"c":"EDAPPADI","w":"EDAPPADI PALANISWAMI. K","p":"All India Anna Dravida Munnetra Kazhagam","wv":148933,"ws":57.67,"m":98110,"tv":258263,"nota":1341,"notas":0.52,"evm":146534,"post":2399,"r2":"Independent","r2v":50823},{"n":87,"c":"SANKARI","w":"VETRIVEL. S","p":"All India Anna Dravida Munnetra Kazhagam","wv":87342,"ws":35.83,"m":9517,"tv":243779,"nota":711,"notas":0.29,"evm":86200,"post":1142,"r2":"Tamilaga Vettri Kazhagam","r2v":77825},{"n":88,"c":"SALEM (WEST)","w":"LAKSHMANAN.S","p":"Tamilaga Vettri Kazhagam","wv":120407,"ws":51.37,"m":74867,"tv":234407,"nota":1052,"notas":0.45,"evm":119587,"post":820,"r2":"Pattali Makkal Katchi","r2v":45540},{"n":89,"c":"SALEM (NORTH)","w":"SIVAKUMAR. K","p":"Tamilaga Vettri Kazhagam","wv":85710,"ws":40.68,"m":14034,"tv":210712,"nota":1205,"notas":0.57,"evm":85218,"post":492,"r2":"Dravida Munnetra Kazhagam","r2v":71676},{"n":90,"c":"SALEM (SOUTH)","w":"VIJAY TAMILAN PARTHIBAN. A","p":"Tamilaga Vettri Kazhagam","wv":91371,"ws":43.95,"m":33369,"tv":207902,"nota":745,"notas":0.36,"evm":91008,"post":363,"r2":"Dravida Munnetra Kazhagam","r2v":58002},{"n":91,"c":"VEERAPANDI","w":"PALANIVEL. M.S","p":"Tamilaga Vettri Kazhagam","wv":79907,"ws":33.88,"m":4071,"tv":235875,"nota":594,"notas":0.25,"evm":79535,"post":372,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":75836},{"n":92,"c":"RASIPURAM","w":"LOGESH TAMILSELVAN D","p":"Tamilaga Vettri Kazhagam","wv":74808,"ws":36.55,"m":14511,"tv":204680,"nota":863,"notas":0.42,"evm":74050,"post":758,"r2":"Bharatiya Janata Party","r2v":60297},{"n":93,"c":"SENTHAMANGALAM","w":"P CHANDRASEKAR","p":"Tamilaga Vettri Kazhagam","wv":68815,"ws":32.82,"m":2655,"tv":209687,"nota":1211,"notas":0.58,"evm":68124,"post":691,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":66160},{"n":94,"c":"NAMAKKAL","w":"DILIP C S","p":"Tamilaga Vettri Kazhagam","wv":79744,"ws":37.56,"m":11008,"tv":212283,"nota":760,"notas":0.36,"evm":78916,"post":828,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":68736},{"n":95,"c":"PARAMATHI-VELUR","w":"SEKAR S","p":"All India Anna Dravida Munnetra Kazhagam","wv":61349,"ws":32.49,"m":308,"tv":188845,"nota":449,"notas":0.24,"evm":60017,"post":1332,"r2":"Dravida Munnetra Kazhagam","r2v":61041},{"n":96,"c":"TIRUCHENGODU","w":"ARUNRAJ K G","p":"Tamilaga Vettri Kazhagam","wv":79500,"ws":41.6,"m":28172,"tv":191122,"nota":520,"notas":0.27,"evm":78824,"post":676,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":51328},{"n":97,"c":"KUMARAPALAYAM","w":"C.VIJAYALAKSHMI","p":"Tamilaga Vettri Kazhagam","wv":81179,"ws":39.54,"m":7696,"tv":205324,"nota":665,"notas":0.32,"evm":80874,"post":305,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":73483},{"n":98,"c":"ERODE (EAST)","w":"M.VIJAY BALAJI","p":"Tamilaga Vettri Kazhagam","wv":69747,"ws":42.93,"m":23966,"tv":162453,"nota":879,"notas":0.54,"evm":69384,"post":363,"r2":"Indian National Congress","r2v":45781},{"n":99,"c":"ERODE (WEST)","w":"ANANTH MOGHAN K.K.","p":"Tamilaga Vettri Kazhagam","wv":96836,"ws":43.74,"m":22250,"tv":221400,"nota":1257,"notas":0.57,"evm":96364,"post":472,"r2":"Dravida Munnetra Kazhagam","r2v":74586},{"n":100,"c":"MODAKKURICHI","w":"D.SHANMUGAN","p":"Tamilaga Vettri Kazhagam","wv":60715,"ws":31.83,"m":2430,"tv":190759,"nota":925,"notas":0.48,"evm":59978,"post":737,"r2":"Bharatiya Janata Party","r2v":58285},{"n":101,"c":"DHARAPURAM","w":"SATHYABAMA.P","p":"All India Anna Dravida Munnetra Kazhagam","wv":81100,"ws":40.56,"m":16727,"tv":199944,"nota":1058,"notas":0.53,"evm":80248,"post":852,"r2":"Dravida Munnetra Kazhagam","r2v":64373},{"n":102,"c":"KANGAYAM","w":"NSN NATARAJ","p":"All India Anna Dravida Munnetra Kazhagam","wv":71122,"ws":34.94,"m":8133,"tv":203534,"nota":706,"notas":0.35,"evm":70352,"post":770,"r2":"Tamilaga Vettri Kazhagam","r2v":62989},{"n":103,"c":"PERUNDURAI","w":"JAYAKUMAR. S","p":"All India Anna Dravida Munnetra Kazhagam","wv":70302,"ws":35.03,"m":9693,"tv":200686,"nota":812,"notas":0.4,"evm":69408,"post":894,"r2":"Dravida Munnetra Kazhagam","r2v":60609},{"n":104,"c":"BHAVANI","w":"KARUPPANAN. K.C","p":"All India Anna Dravida Munnetra Kazhagam","wv":75577,"ws":36.28,"m":7396,"tv":208323,"nota":1409,"notas":0.68,"evm":74402,"post":1175,"r2":"Tamilaga Vettri Kazhagam","r2v":68181},{"n":105,"c":"ANTHIYUR","w":"HARIBASKAR.P","p":"All India Anna Dravida Munnetra Kazhagam","wv":60042,"ws":32.32,"m":1260,"tv":185775,"nota":754,"notas":0.41,"evm":59183,"post":859,"r2":"Dravida Munnetra Kazhagam","r2v":58782},{"n":106,"c":"GOBICHETTIPALAYAM","w":"SENGOTTAIYAN.K.A","p":"Tamilaga Vettri Kazhagam","wv":82612,"ws":37.6,"m":16620,"tv":219727,"nota":907,"notas":0.41,"evm":81628,"post":984,"r2":"Dravida Munnetra Kazhagam","r2v":65992},{"n":107,"c":"BHAVANISAGAR","w":"V.P.TAMILSELVI","p":"Tamilaga Vettri Kazhagam","wv":72391,"ws":33.73,"m":4569,"tv":214595,"nota":1804,"notas":0.84,"evm":71879,"post":512,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":67822},{"n":108,"c":"UDHAGAMANDALAM","w":"BHOJARAJAN.M","p":"Bharatiya Janata Party","wv":48488,"ws":32.61,"m":976,"tv":148704,"nota":1525,"notas":1.03,"evm":47734,"post":754,"r2":"Tamilaga Vettri Kazhagam","r2v":47512},{"n":109,"c":"GUDALUR","w":"DHRAVIDAMANI.M","p":"Dravida Munnetra Kazhagam","wv":65590,"ws":43.37,"m":22833,"tv":151241,"nota":871,"notas":0.58,"evm":64926,"post":664,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":42757},{"n":110,"c":"COONOOR","w":"M. RAJU","p":"Dravida Munnetra Kazhagam","wv":50470,"ws":35.69,"m":8099,"tv":141394,"nota":720,"notas":0.51,"evm":49583,"post":887,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":42371},{"n":111,"c":"METTUPPALAYAM","w":"SUNILANAND","p":"Tamilaga Vettri Kazhagam","wv":75664,"ws":30.97,"m":7768,"tv":244319,"nota":839,"notas":0.34,"evm":75392,"post":272,"r2":"Dravida Munnetra Kazhagam","r2v":67896},{"n":112,"c":"AVANASHI","w":"KAMALI.S","p":"Tamilaga Vettri Kazhagam","wv":84209,"ws":36.36,"m":15373,"tv":231600,"nota":1563,"notas":0.67,"evm":83730,"post":479,"r2":"Bharatiya Janata Party","r2v":68836},{"n":113,"c":"TIRUPPUR (NORTH)","w":"V.SATHYABAMA","p":"Tamilaga Vettri Kazhagam","wv":131401,"ws":49.88,"m":69992,"tv":263457,"nota":1078,"notas":0.41,"evm":130901,"post":500,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":61409},{"n":114,"c":"TIRUPPUR (SOUTH)","w":"BALAMURUGAN. S","p":"Tamilaga Vettri Kazhagam","wv":73793,"ws":41.04,"m":12901,"tv":179814,"nota":644,"notas":0.36,"evm":73472,"post":321,"r2":"Dravida Munnetra Kazhagam","r2v":60892},{"n":115,"c":"PALLADAM","w":"K.RAMKUMAR","p":"Tamilaga Vettri Kazhagam","wv":121297,"ws":40.3,"m":37897,"tv":301014,"nota":1417,"notas":0.47,"evm":120703,"post":594,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":83400},{"n":116,"c":"SULUR","w":"NM.SUKUMAR","p":"Tamilaga Vettri Kazhagam","wv":90531,"ws":33.1,"m":4790,"tv":273544,"nota":1353,"notas":0.49,"evm":90237,"post":294,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":85741},{"n":117,"c":"KAVUNDAMPALAYAM","w":"KANIMOZHI SANTHOSH","p":"Tamilaga Vettri Kazhagam","wv":146466,"ws":40.24,"m":42140,"tv":363991,"nota":2116,"notas":0.58,"evm":145888,"post":578,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":104326},{"n":118,"c":"COIMBATORE (NORTH)","w":"V. SAMPATHKUMAR","p":"Tamilaga Vettri Kazhagam","wv":92500,"ws":40.91,"m":21992,"tv":226109,"nota":1020,"notas":0.45,"evm":92136,"post":364,"r2":"Dravida Munnetra Kazhagam","r2v":70508},{"n":119,"c":"THONDAMUTHUR","w":"S.P.VELUMANI","p":"All India Anna Dravida Munnetra Kazhagam","wv":93316,"ws":36.09,"m":14725,"tv":258549,"nota":1000,"notas":0.39,"evm":92372,"post":944,"r2":"Tamilaga Vettri Kazhagam","r2v":78591},{"n":120,"c":"COIMBATORE (SOUTH)","w":"V SENTHILBALAJI","p":"Dravida Munnetra Kazhagam","wv":59724,"ws":38.16,"m":2271,"tv":156499,"nota":759,"notas":0.48,"evm":59167,"post":557,"r2":"Tamilaga Vettri Kazhagam","r2v":57453},{"n":121,"c":"SINGANALLUR","w":"K.S.SRI GIRI PRASATH","p":"Tamilaga Vettri Kazhagam","wv":84163,"ws":38.08,"m":19139,"tv":221033,"nota":1346,"notas":0.61,"evm":83725,"post":438,"r2":"Indian National Congress","r2v":65024},{"n":122,"c":"KINATHUKADAVU","w":"VIGNESH K","p":"Tamilaga Vettri Kazhagam","wv":99950,"ws":37.31,"m":11710,"tv":267917,"nota":1717,"notas":0.64,"evm":99661,"post":289,"r2":"Dravida Munnetra Kazhagam","r2v":88240},{"n":123,"c":"POLLACHI","w":"K. NITHYANANDHAN","p":"Dravida Munnetra Kazhagam","wv":62013,"ws":34.22,"m":4627,"tv":181196,"nota":849,"notas":0.47,"evm":61347,"post":666,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":57386},{"n":124,"c":"VALPARAI","w":"KUTTY (ALIAS) SUDHAKAR. A","p":"Dravida Munnetra Kazhagam","wv":54671,"ws":36.34,"m":9371,"tv":150431,"nota":675,"notas":0.45,"evm":54096,"post":575,"r2":"Tamilaga Vettri Kazhagam","r2v":45300},{"n":125,"c":"UDUMALAIPETTAI","w":"JAYAKUMAR M.","p":"Dravida Munnetra Kazhagam","wv":68549,"ws":33.67,"m":2882,"tv":203575,"nota":1149,"notas":0.56,"evm":67727,"post":822,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":65667},{"n":126,"c":"MADATHUKULAM","w":"R JAYARAMAKRISHNAN","p":"Dravida Munnetra Kazhagam","wv":70458,"ws":37.43,"m":15968,"tv":188249,"nota":911,"notas":0.48,"evm":69595,"post":863,"r2":"Amma Makkal Munnettra Kazagam","r2v":54490},{"n":127,"c":"PALANI","w":"RAVIMANOHARAN. K","p":"All India Anna Dravida Munnetra Kazhagam","wv":66986,"ws":32.11,"m":693,"tv":208619,"nota":750,"notas":0.36,"evm":66426,"post":560,"r2":"Tamilaga Vettri Kazhagam","r2v":66293},{"n":128,"c":"ODDANCHATRAM","w":"SAKKARAPANI. R","p":"Dravida Munnetra Kazhagam","wv":93099,"ws":46.17,"m":43249,"tv":201624,"nota":1491,"notas":0.74,"evm":92068,"post":1031,"r2":"Bharatiya Janata Party","r2v":49850},{"n":129,"c":"ATHOOR","w":"I. PERIASAMY","p":"Dravida Munnetra Kazhagam","wv":106240,"ws":44.79,"m":22368,"tv":237183,"nota":812,"notas":0.34,"evm":104467,"post":1773,"r2":"Tamilaga Vettri Kazhagam","r2v":83872},{"n":130,"c":"NILAKKOTTAI","w":"AYYANAR.R","p":"Tamilaga Vettri Kazhagam","wv":68580,"ws":34.71,"m":2925,"tv":197593,"nota":642,"notas":0.32,"evm":67953,"post":627,"r2":"Dravida Munnetra Kazhagam","r2v":65655},{"n":131,"c":"NATHAM","w":"NATHAM VISWANATHAN R","p":"All India Anna Dravida Munnetra Kazhagam","wv":85708,"ws":35.84,"m":11869,"tv":239140,"nota":596,"notas":0.25,"evm":85215,"post":493,"r2":"Dravida Munnetra Kazhagam","r2v":73839},{"n":132,"c":"DINDIGUL","w":"SENTHILKUMAR. I.P","p":"Dravida Munnetra Kazhagam","wv":74489,"ws":35.13,"m":1131,"tv":212024,"nota":833,"notas":0.39,"evm":73160,"post":1329,"r2":"Tamilaga Vettri Kazhagam","r2v":73358},{"n":133,"c":"VEDASANDUR","w":"SAMINATHAN. T","p":"Dravida Munnetra Kazhagam","wv":84948,"ws":37.5,"m":10063,"tv":226554,"nota":474,"notas":0.21,"evm":84196,"post":752,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":74885},{"n":134,"c":"ARAVAKURICHI","w":"ELANGO. R","p":"Dravida Munnetra Kazhagam","wv":70827,"ws":39.11,"m":19382,"tv":181078,"nota":637,"notas":0.35,"evm":70058,"post":769,"r2":"Tamilaga Vettri Kazhagam","r2v":51445},{"n":135,"c":"KARUR","w":"M.R. VIJAYABHASKAR","p":"All India Anna Dravida Munnetra Kazhagam","wv":71542,"ws":32.99,"m":1821,"tv":216829,"nota":539,"notas":0.25,"evm":70887,"post":655,"r2":"Tamilaga Vettri Kazhagam","r2v":69721},{"n":136,"c":"KRISHNARAYAPURAM","w":"SATHYA. M","p":"Tamilaga Vettri Kazhagam","wv":62378,"ws":32.94,"m":3503,"tv":189357,"nota":525,"notas":0.28,"evm":61989,"post":389,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":58875},{"n":137,"c":"KULITHALAI","w":"SURIYANUR. A. CHANDRAN","p":"Dravida Munnetra Kazhagam","wv":68138,"ws":32.59,"m":579,"tv":209091,"nota":612,"notas":0.29,"evm":67204,"post":934,"r2":"Tamilaga Vettri Kazhagam","r2v":67559},{"n":138,"c":"MANAPPARAI","w":"R. KATHIRAVAN","p":"Tamilaga Vettri Kazhagam","wv":83041,"ws":34.43,"m":1426,"tv":241216,"nota":949,"notas":0.39,"evm":82268,"post":773,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":81615},{"n":139,"c":"SRIRANGAM","w":"RAMESH","p":"Tamilaga Vettri Kazhagam","wv":103235,"ws":40.49,"m":33590,"tv":254985,"nota":929,"notas":0.36,"evm":102496,"post":739,"r2":"Dravida Munnetra Kazhagam","r2v":69645},{"n":140,"c":"TIRUCHIRAPPALLI (WEST)","w":"K.N.NEHRU","p":"Dravida Munnetra Kazhagam","wv":88235,"ws":44.94,"m":4786,"tv":196347,"nota":1098,"notas":0.56,"evm":86969,"post":1266,"r2":"Tamilaga Vettri Kazhagam","r2v":83449},{"n":141,"c":"TIRUCHIRAPPALLI (EAST)","w":"C. JOSEPH VIJAY","p":"Tamilaga Vettri Kazhagam","wv":91381,"ws":50.07,"m":27416,"tv":182493,"nota":514,"notas":0.28,"evm":90431,"post":950,"r2":"Dravida Munnetra Kazhagam","r2v":63965},{"n":142,"c":"THIRUVERUMBUR","w":"VIJAYAKUMAR (A) NAVALPATTU S. VIJI","p":"Tamilaga Vettri Kazhagam","wv":89837,"ws":42.06,"m":8705,"tv":213583,"nota":745,"notas":0.35,"evm":88886,"post":951,"r2":"Dravida Munnetra Kazhagam","r2v":81132},{"n":143,"c":"LALGUDI","w":"LEEMAROSE MARTIN","p":"All India Anna Dravida Munnetra Kazhagam","wv":60795,"ws":32.82,"m":2739,"tv":185213,"nota":390,"notas":0.21,"evm":60329,"post":466,"r2":"Tamilaga Vettri Kazhagam","r2v":58056},{"n":144,"c":"MANACHANALLUR","w":"KATHIRAVAN. S","p":"Dravida Munnetra Kazhagam","wv":81447,"ws":38.82,"m":12364,"tv":209780,"nota":599,"notas":0.29,"evm":80054,"post":1393,"r2":"Tamilaga Vettri Kazhagam","r2v":69083},{"n":145,"c":"MUSIRI","w":"M.VIGNESH","p":"Tamilaga Vettri Kazhagam","wv":71281,"ws":37.69,"m":17442,"tv":189141,"nota":1093,"notas":0.58,"evm":70317,"post":964,"r2":"Dravida Munnetra Kazhagam","r2v":53839},{"n":146,"c":"THURAIYUR","w":"RAVISANKAR.M","p":"Tamilaga Vettri Kazhagam","wv":66263,"ws":35.93,"m":9614,"tv":184426,"nota":697,"notas":0.38,"evm":65711,"post":552,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":56649},{"n":147,"c":"PERAMBALUR","w":"SIVAKUMAR. K","p":"Tamilaga Vettri Kazhagam","wv":90882,"ws":35.83,"m":14393,"tv":253654,"nota":1160,"notas":0.46,"evm":89776,"post":1106,"r2":"Dravida Munnetra Kazhagam","r2v":76489},{"n":148,"c":"KUNNAM","w":"SIVASANKAR. S.S","p":"Dravida Munnetra Kazhagam","wv":87237,"ws":37.84,"m":15557,"tv":230570,"nota":484,"notas":0.21,"evm":85785,"post":1452,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":71680},{"n":149,"c":"ARIYALUR","w":"RAJENDRAN S","p":"All India Anna Dravida Munnetra Kazhagam","wv":95219,"ws":40.37,"m":24498,"tv":235858,"nota":641,"notas":0.27,"evm":94468,"post":751,"r2":"Dravida Munnetra Kazhagam","r2v":70721},{"n":150,"c":"JAYANKONDAM","w":"VAITHILINGAM G.","p":"Pattali Makkal Katchi","wv":88992,"ws":38.94,"m":18490,"tv":228548,"nota":416,"notas":0.18,"evm":87999,"post":993,"r2":"Dravida Munnetra Kazhagam","r2v":70502},{"n":151,"c":"TITTAKUDI","w":"GANESAN C.V","p":"Dravida Munnetra Kazhagam","wv":63106,"ws":35.91,"m":2629,"tv":175754,"nota":584,"notas":0.33,"evm":62086,"post":1020,"r2":"Tamilaga Vettri Kazhagam","r2v":60477},{"n":152,"c":"VRIDDHACHALAM","w":"PREMALLATHA VIJAYAKANT","p":"Desiya Murpokku Dravida Kazhagam","wv":69351,"ws":33.15,"m":2387,"tv":209186,"nota":755,"notas":0.36,"evm":68625,"post":726,"r2":"Tamilaga Vettri Kazhagam","r2v":66964},{"n":153,"c":"NEYVELI","w":"RAJENDRAN.R","p":"All India Anna Dravida Munnetra Kazhagam","wv":63731,"ws":37.76,"m":10962,"tv":168780,"nota":768,"notas":0.46,"evm":62862,"post":869,"r2":"Dravida Munnetra Kazhagam","r2v":52769},{"n":154,"c":"PANRUTI","w":"MOHAN. K","p":"All India Anna Dravida Munnetra Kazhagam","wv":78398,"ws":37.2,"m":10663,"tv":210767,"nota":907,"notas":0.43,"evm":77385,"post":1013,"r2":"Viduthalai Chiruthaigal Katchi","r2v":67735},{"n":155,"c":"CUDDALORE","w":"B.RAJKUMAR","p":"Tamilaga Vettri Kazhagam","wv":70856,"ws":37.22,"m":15519,"tv":190378,"nota":894,"notas":0.47,"evm":69847,"post":1009,"r2":"Indian National Congress","r2v":55337},{"n":156,"c":"KURINJIPADI","w":"M.R.K.PANNEERSELVAM","p":"Dravida Munnetra Kazhagam","wv":76695,"ws":35.84,"m":7589,"tv":213965,"nota":629,"notas":0.29,"evm":75778,"post":917,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":69106},{"n":157,"c":"BHUVANAGIRI","w":"ARUNMOZHITHEVAN . A","p":"All India Anna Dravida Munnetra Kazhagam","wv":75707,"ws":36.52,"m":2487,"tv":207310,"nota":681,"notas":0.33,"evm":74628,"post":1079,"r2":"Dravida Munnetra Kazhagam","r2v":73220},{"n":158,"c":"CHIDAMBARAM","w":"THAMIMUN ANSARI. M","p":"Dravida Munnetra Kazhagam","wv":69739,"ws":35.48,"m":5747,"tv":196586,"nota":816,"notas":0.42,"evm":68566,"post":1173,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":63992},{"n":159,"c":"KATTUMANNARKOIL","w":"L.E. JOTHIMANI","p":"Viduthalai Chiruthaigal Katchi","wv":85179,"ws":45.33,"m":33063,"tv":187905,"nota":465,"notas":0.25,"evm":84130,"post":1049,"r2":"Pattali Makkal Katchi","r2v":52116},{"n":160,"c":"SIRKAZHI","w":"SENTHILSELVAN.R","p":"Dravida Munnetra Kazhagam","wv":71449,"ws":35.64,"m":11417,"tv":200448,"nota":555,"notas":0.28,"evm":70765,"post":684,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":60032},{"n":161,"c":"MAYILADUTHURAI","w":"JAMAL MOHAMED YOUNOOS. Y.N","p":"Indian National Congress","wv":68011,"ws":36.09,"m":10845,"tv":188461,"nota":474,"notas":0.25,"evm":67189,"post":822,"r2":"Pattali Makkal Katchi","r2v":57166},{"n":162,"c":"POOMPUHAR","w":"NIVEDHA M MURUGAN","p":"Dravida Munnetra Kazhagam","wv":81096,"ws":36.98,"m":8260,"tv":219324,"nota":586,"notas":0.27,"evm":80554,"post":542,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":72836},{"n":163,"c":"NAGAPATTINAM","w":"M.H.JAWAHIRULLAH","p":"Dravida Munnetra Kazhagam","wv":56305,"ws":37.21,"m":9781,"tv":151326,"nota":479,"notas":0.32,"evm":55695,"post":610,"r2":"Tamilaga Vettri Kazhagam","r2v":46524},{"n":164,"c":"KILVELUR","w":"LATHA. T","p":"Communist Party of India (Marxist)","wv":56108,"ws":37,"m":2278,"tv":151637,"nota":545,"notas":0.36,"evm":55409,"post":699,"r2":"Tamilaga Vettri Kazhagam","r2v":53830},{"n":165,"c":"VEDARANYAM","w":"MANIAN. O.S","p":"All India Anna Dravida Munnetra Kazhagam","wv":59172,"ws":36.48,"m":7331,"tv":162216,"nota":563,"notas":0.35,"evm":58108,"post":1064,"r2":"Dravida Munnetra Kazhagam","r2v":51841},{"n":166,"c":"THIRUTHURAIPOONDI","w":"MARIMUTHU.K","p":"Communist Party of India","wv":74062,"ws":38.77,"m":12922,"tv":191030,"nota":797,"notas":0.42,"evm":73139,"post":923,"r2":"Tamilaga Vettri Kazhagam","r2v":61140},{"n":167,"c":"MANNARGUDI","w":"KAMARAJ. S","p":"Amma Makkal Munnettra Kazagam","wv":68416,"ws":35.25,"m":1566,"tv":194100,"nota":405,"notas":0.21,"evm":67837,"post":579,"r2":"Dravida Munnetra Kazhagam","r2v":66850},{"n":168,"c":"THIRUVARUR","w":"KALAIVANAN POONDI  K","p":"Dravida Munnetra Kazhagam","wv":93408,"ws":42.87,"m":18148,"tv":217875,"nota":825,"notas":0.38,"evm":92504,"post":904,"r2":"Tamilaga Vettri Kazhagam","r2v":75260},{"n":169,"c":"NANNILAM","w":"KAMARAJ. R","p":"All India Anna Dravida Munnetra Kazhagam","wv":103462,"ws":44.7,"m":41724,"tv":231444,"nota":936,"notas":0.4,"evm":102544,"post":918,"r2":"Dravida Munnetra Kazhagam","r2v":61738},{"n":170,"c":"THIRUVIDAIMARUDUR","w":"GOVI.CHEZHIAAN","p":"Dravida Munnetra Kazhagam","wv":79951,"ws":38.26,"m":14116,"tv":208944,"nota":747,"notas":0.36,"evm":79307,"post":644,"r2":"Tamilaga Vettri Kazhagam","r2v":65835},{"n":171,"c":"KUMBAKONAM","w":"VINOTH","p":"Tamilaga Vettri Kazhagam","wv":78650,"ws":37.76,"m":679,"tv":208288,"nota":960,"notas":0.46,"evm":78255,"post":395,"r2":"Dravida Munnetra Kazhagam","r2v":77971},{"n":172,"c":"PAPANASAM","w":"A.M. SHAHJAHAN","p":"Indian Union Muslim League","wv":69284,"ws":33.35,"m":1065,"tv":207723,"nota":716,"notas":0.34,"evm":68742,"post":542,"r2":"Tamilaga Vettri Kazhagam","r2v":68219},{"n":173,"c":"THIRUVAIYARU","w":"DURAI. CHANDRASEKARAN","p":"Dravida Munnetra Kazhagam","wv":80425,"ws":36.21,"m":8555,"tv":222111,"nota":948,"notas":0.43,"evm":79538,"post":887,"r2":"Tamilaga Vettri Kazhagam","r2v":71870},{"n":174,"c":"THANJAVUR","w":"R. VIJAYSARAVANAN","p":"Tamilaga Vettri Kazhagam","wv":87705,"ws":44.12,"m":16955,"tv":198798,"nota":1274,"notas":0.64,"evm":86874,"post":831,"r2":"Dravida Munnetra Kazhagam","r2v":70750},{"n":175,"c":"ORATHANADU","w":"R. VAITHILINGAM","p":"Dravida Munnetra Kazhagam","wv":86759,"ws":44.42,"m":35028,"tv":195304,"nota":631,"notas":0.32,"evm":85816,"post":943,"r2":"Tamilaga Vettri Kazhagam","r2v":51731},{"n":176,"c":"PATTUKKOTTAI","w":"ANNADURAI K","p":"Dravida Munnetra Kazhagam","wv":65963,"ws":35.9,"m":13754,"tv":183745,"nota":738,"notas":0.4,"evm":65297,"post":666,"r2":"Tamilaga Vettri Kazhagam","r2v":52209},{"n":177,"c":"PERAVURANI","w":"ASHOKKUMAR. N","p":"Dravida Munnetra Kazhagam","wv":60919,"ws":34.56,"m":3162,"tv":176274,"nota":695,"notas":0.39,"evm":60262,"post":657,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":57757},{"n":178,"c":"GANDHARVAKOTTAI","w":"N. SUBRAMANIAN","p":"Tamilaga Vettri Kazhagam","wv":58795,"ws":35.08,"m":11039,"tv":167618,"nota":1127,"notas":0.67,"evm":58386,"post":409,"r2":"Bharatiya Janata Party","r2v":47756},{"n":179,"c":"VIRALIMALAI","w":"VIJAYABASKAR. C","p":"All India Anna Dravida Munnetra Kazhagam","wv":105773,"ws":51.87,"m":62073,"tv":203921,"nota":375,"notas":0.18,"evm":104857,"post":916,"r2":"Tamilaga Vettri Kazhagam","r2v":43700},{"n":180,"c":"PUDUKKOTTAI","w":"V. MUTHURAJA","p":"Dravida Munnetra Kazhagam","wv":66825,"ws":35.1,"m":1867,"tv":190378,"nota":467,"notas":0.25,"evm":65745,"post":1080,"r2":"Tamilaga Vettri Kazhagam","r2v":64958},{"n":181,"c":"THIRUMAYAM","w":"REGUPATHY.S","p":"Dravida Munnetra Kazhagam","wv":58201,"ws":31.87,"m":1492,"tv":182612,"nota":945,"notas":0.52,"evm":57676,"post":525,"r2":"Tamilaga Vettri Kazhagam","r2v":56709},{"n":182,"c":"ALANGUDI","w":"SIVA.V.MEYYANATHAN","p":"Dravida Munnetra Kazhagam","wv":64929,"ws":35.98,"m":12977,"tv":180483,"nota":673,"notas":0.37,"evm":64162,"post":767,"r2":"Tamilaga Vettri Kazhagam","r2v":51952},{"n":183,"c":"ARANTHANGI","w":"MOHAMED FARVAS. J","p":"Tamilaga Vettri Kazhagam","wv":73244,"ws":40.08,"m":10062,"tv":182730,"nota":580,"notas":0.32,"evm":72661,"post":583,"r2":"Indian National Congress","r2v":63182},{"n":184,"c":"KARAIKUDI","w":"DR.PRABHU. TK","p":"Tamilaga Vettri Kazhagam","wv":101358,"ws":44.21,"m":46074,"tv":229267,"nota":519,"notas":0.23,"evm":100627,"post":731,"r2":"Indian National Congress","r2v":55284},{"n":185,"c":"TIRUPPATTUR","w":"SEENIVASA SETHUPATHY. R","p":"Tamilaga Vettri Kazhagam","wv":83375,"ws":38.65,"m":1,"tv":215710,"nota":747,"notas":0.35,"evm":83010,"post":365,"r2":"Dravida Munnetra Kazhagam","r2v":83374},{"n":186,"c":"SIVAGANGA","w":"KULANTHAI RANI A","p":"Tamilaga Vettri Kazhagam","wv":73737,"ws":34.45,"m":15081,"tv":214067,"nota":1053,"notas":0.49,"evm":72917,"post":820,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":58656},{"n":187,"c":"MANAMADURAI","w":"ELANGOVAN.D","p":"Tamilaga Vettri Kazhagam","wv":69971,"ws":33.54,"m":1208,"tv":208643,"nota":846,"notas":0.41,"evm":68882,"post":1089,"r2":"Dravida Munnetra Kazhagam","r2v":68763},{"n":188,"c":"MELUR","w":"P.VISWANATHAN","p":"Indian National Congress","wv":60080,"ws":31.5,"m":2724,"tv":190726,"nota":554,"notas":0.29,"evm":59486,"post":594,"r2":"Tamilaga Vettri Kazhagam","r2v":57356},{"n":189,"c":"MADURAI EAST","w":"KARTHIKEYAN S","p":"Tamilaga Vettri Kazhagam","wv":118777,"ws":43.74,"m":16547,"tv":271566,"nota":1177,"notas":0.43,"evm":117714,"post":1063,"r2":"Dravida Munnetra Kazhagam","r2v":102230},{"n":190,"c":"SHOLAVANDAN","w":"KARUPPAIAH.M.V","p":"Tamilaga Vettri Kazhagam","wv":63907,"ws":33.8,"m":2678,"tv":189080,"nota":571,"notas":0.3,"evm":63234,"post":673,"r2":"Dravida Munnetra Kazhagam","r2v":61229},{"n":191,"c":"MADURAI NORTH","w":"A.KALLANAI","p":"Tamilaga Vettri Kazhagam","wv":72853,"ws":45.03,"m":18038,"tv":161801,"nota":753,"notas":0.47,"evm":72121,"post":732,"r2":"Dravida Munnetra Kazhagam","r2v":54815},{"n":192,"c":"MADURAI SOUTH","w":"M.M.GOPISON","p":"Tamilaga Vettri Kazhagam","wv":62415,"ws":44.11,"m":21529,"tv":141503,"nota":612,"notas":0.43,"evm":62162,"post":253,"r2":"Dravida Munnetra Kazhagam","r2v":40886},{"n":193,"c":"MADURAI CENTRAL","w":"MADHAR BADHURUDEEN","p":"Tamilaga Vettri Kazhagam","wv":63414,"ws":42.68,"m":19128,"tv":148586,"nota":656,"notas":0.44,"evm":63106,"post":308,"r2":"Dravida Munnetra Kazhagam","r2v":44286},{"n":194,"c":"MADURAI WEST","w":"THANGAPANDI SR","p":"Tamilaga Vettri Kazhagam","wv":88250,"ws":40.78,"m":11931,"tv":216403,"nota":893,"notas":0.41,"evm":87539,"post":711,"r2":"Dravida Munnetra Kazhagam","r2v":76319},{"n":195,"c":"THIRUPARANKUNDRAM","w":"NIRMALKUMAR. R.","p":"Tamilaga Vettri Kazhagam","wv":114316,"ws":44.75,"m":41553,"tv":255466,"nota":1148,"notas":0.45,"evm":113578,"post":738,"r2":"Dravida Munnetra Kazhagam","r2v":72763},{"n":196,"c":"THIRUMANGALAM","w":"MANIMARAN.M","p":"Dravida Munnetra Kazhagam","wv":88291,"ws":38.22,"m":23807,"tv":230980,"nota":933,"notas":0.4,"evm":87063,"post":1228,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":64484},{"n":197,"c":"USILAMPATTI","w":"VIJAY. M","p":"Tamilaga Vettri Kazhagam","wv":65743,"ws":29.34,"m":1805,"tv":224048,"nota":692,"notas":0.31,"evm":64693,"post":1050,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":63938},{"n":198,"c":"ANDIPATTI","w":"MAHARAJAN.A","p":"Dravida Munnetra Kazhagam","wv":74324,"ws":34.2,"m":9554,"tv":217329,"nota":1028,"notas":0.47,"evm":73609,"post":715,"r2":"Tamilaga Vettri Kazhagam","r2v":64770},{"n":199,"c":"PERIYAKULAM","w":"SABARI IYNGARAN G.","p":"Tamilaga Vettri Kazhagam","wv":85656,"ws":40.56,"m":19321,"tv":211209,"nota":1506,"notas":0.71,"evm":84822,"post":834,"r2":"Viduthalai Chiruthaigal Katchi","r2v":66335},{"n":200,"c":"BODINAYAKANUR","w":"PANNEERSELVAM.O","p":"Dravida Munnetra Kazhagam","wv":85206,"ws":38.62,"m":6805,"tv":220628,"nota":931,"notas":0.42,"evm":84228,"post":978,"r2":"Tamilaga Vettri Kazhagam","r2v":78401},{"n":201,"c":"CUMBUM","w":"JEGANATHMISHRA PLA","p":"Tamilaga Vettri Kazhagam","wv":85394,"ws":40.55,"m":751,"tv":210574,"nota":667,"notas":0.32,"evm":84340,"post":1054,"r2":"Dravida Munnetra Kazhagam","r2v":84643},{"n":202,"c":"RAJAPALAYAM","w":"JEGADESHWARI. K","p":"Tamilaga Vettri Kazhagam","wv":65548,"ws":35.81,"m":10605,"tv":183020,"nota":753,"notas":0.41,"evm":64947,"post":601,"r2":"Dravida Munnetra Kazhagam","r2v":54943},{"n":203,"c":"SRIVILLIPUTHUR","w":"KARTHIK.A","p":"Tamilaga Vettri Kazhagam","wv":65653,"ws":33.93,"m":8581,"tv":193471,"nota":873,"notas":0.45,"evm":64709,"post":944,"r2":"Communist Party of India","r2v":57072},{"n":204,"c":"SATTUR","w":"KADARKARAIRAJ. A","p":"Dravida Munnetra Kazhagam","wv":62060,"ws":31.23,"m":5989,"tv":198734,"nota":476,"notas":0.24,"evm":61342,"post":718,"r2":"Bharatiya Janata Party","r2v":56071},{"n":205,"c":"SIVAKASI","w":"KEERTHANA S","p":"Tamilaga Vettri Kazhagam","wv":68709,"ws":35.51,"m":11670,"tv":193517,"nota":948,"notas":0.49,"evm":68273,"post":436,"r2":"Indian National Congress","r2v":57039},{"n":206,"c":"VIRUDHUNAGAR","w":"SELVAM P","p":"Tamilaga Vettri Kazhagam","wv":63653,"ws":37.93,"m":9391,"tv":167832,"nota":954,"notas":0.57,"evm":63070,"post":583,"r2":"Desiya Murpokku Dravida Kazhagam","r2v":54262},{"n":207,"c":"ARUPPUKKOTTAI","w":"RAMACHANDRAN. K.K.S.S.R","p":"Dravida Munnetra Kazhagam","wv":65104,"ws":36.49,"m":4943,"tv":178413,"nota":692,"notas":0.39,"evm":64124,"post":980,"r2":"Tamilaga Vettri Kazhagam","r2v":60161},{"n":208,"c":"TIRUCHULI","w":"THANGAM THENARASU","p":"Dravida Munnetra Kazhagam","wv":75085,"ws":41.43,"m":13485,"tv":181250,"nota":425,"notas":0.23,"evm":74298,"post":787,"r2":"Tamilaga Vettri Kazhagam","r2v":61600},{"n":209,"c":"PARAMAKUDI","w":"ADVOCATE. KATHIRAVAN. K.K","p":"Dravida Munnetra Kazhagam","wv":59161,"ws":31.18,"m":3548,"tv":189753,"nota":710,"notas":0.37,"evm":58217,"post":944,"r2":"Tamilaga Vettri Kazhagam","r2v":55613},{"n":210,"c":"TIRUVADANAI","w":"RAJEEV","p":"Tamilaga Vettri Kazhagam","wv":69551,"ws":31.57,"m":2513,"tv":220278,"nota":354,"notas":0.16,"evm":69001,"post":550,"r2":"Indian National Congress","r2v":67038},{"n":211,"c":"RAMANATHAPURAM","w":"KATHARBATCHA MUTHURAMALINGAM","p":"Dravida Munnetra Kazhagam","wv":89137,"ws":37.52,"m":12459,"tv":237576,"nota":953,"notas":0.4,"evm":88339,"post":798,"r2":"Tamilaga Vettri Kazhagam","r2v":76678},{"n":212,"c":"MUDHUKULATHUR","w":"R.S.RAJAKANNAPPAN","p":"Dravida Munnetra Kazhagam","wv":68003,"ws":29.39,"m":16598,"tv":231373,"nota":429,"notas":0.19,"evm":67117,"post":886,"r2":"Tamilaga Vettri Kazhagam","r2v":51405},{"n":213,"c":"VILATHIKULAM","w":"MARKANDAYAN G V","p":"Dravida Munnetra Kazhagam","wv":58395,"ws":33.4,"m":8228,"tv":174814,"nota":642,"notas":0.37,"evm":57458,"post":937,"r2":"Tamilaga Vettri Kazhagam","r2v":50167},{"n":214,"c":"THOOTHUKKUDI","w":"SRINATH","p":"Tamilaga Vettri Kazhagam","wv":100536,"ws":49.11,"m":37731,"tv":204712,"nota":853,"notas":0.42,"evm":99900,"post":636,"r2":"Dravida Munnetra Kazhagam","r2v":62805},{"n":215,"c":"TIRUCHENDUR","w":"ANITHA R. RADHAKRISHNAN","p":"Dravida Munnetra Kazhagam","wv":72723,"ws":39.09,"m":5872,"tv":186050,"nota":722,"notas":0.39,"evm":71564,"post":1159,"r2":"Tamilaga Vettri Kazhagam","r2v":66851},{"n":216,"c":"SRIVAIKUNTAM","w":"SARAVANAN. G","p":"Tamilaga Vettri Kazhagam","wv":58814,"ws":33.34,"m":1186,"tv":176421,"nota":579,"notas":0.33,"evm":58143,"post":671,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":57628},{"n":217,"c":"OTTAPIDARAM","w":"P .MATHANRAJA","p":"Tamilaga Vettri Kazhagam","wv":81625,"ws":41.62,"m":29083,"tv":196117,"nota":879,"notas":0.45,"evm":80561,"post":1064,"r2":"Dravida Munnetra Kazhagam","r2v":52542},{"n":218,"c":"KOVILPATTI","w":"KARUNANITHI.K","p":"Dravida Munnetra Kazhagam","wv":61643,"ws":31.74,"m":843,"tv":194232,"nota":593,"notas":0.31,"evm":60803,"post":840,"r2":"Tamilaga Vettri Kazhagam","r2v":60800},{"n":219,"c":"SANKARANKOVIL","w":"DR. DHILIPAN JAISHANKAR","p":"All India Anna Dravida Munnetra Kazhagam","wv":64865,"ws":33.01,"m":6489,"tv":196480,"nota":560,"notas":0.29,"evm":63854,"post":1011,"r2":"Tamilaga Vettri Kazhagam","r2v":58376},{"n":220,"c":"VASUDEVANALLUR","w":"E. RAJA","p":"Dravida Munnetra Kazhagam","wv":63045,"ws":33.22,"m":6583,"tv":189795,"nota":637,"notas":0.34,"evm":61907,"post":1138,"r2":"Bharatiya Janata Party","r2v":56462},{"n":221,"c":"KADAYANALLUR","w":"RAJENDRAN. T. M","p":"Dravida Munnetra Kazhagam","wv":79832,"ws":35.97,"m":6253,"tv":221951,"nota":527,"notas":0.24,"evm":78809,"post":1023,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":73579},{"n":222,"c":"TENKASI","w":"DR.KALAI KATHIRAVAN","p":"Dravida Munnetra Kazhagam","wv":79699,"ws":33.92,"m":10299,"tv":234987,"nota":673,"notas":0.29,"evm":78535,"post":1164,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":69400},{"n":223,"c":"ALANGULAM","w":"PAUL MANOJ PANDIAN","p":"Dravida Munnetra Kazhagam","wv":69170,"ws":31.32,"m":7798,"tv":220857,"nota":982,"notas":0.44,"evm":67974,"post":1196,"r2":"All India Anna Dravida Munnetra Kazhagam","r2v":61372},{"n":224,"c":"TIRUNELVELI","w":"MURUGHAN.R.S.","p":"Tamilaga Vettri Kazhagam","wv":75840,"ws":34.72,"m":11414,"tv":218425,"nota":717,"notas":0.33,"evm":75157,"post":683,"r2":"Dravida Munnetra Kazhagam","r2v":64426},{"n":225,"c":"AMBASAMUDRAM","w":"DR.ESAKKI SUBAYA","p":"All India Anna Dravida Munnetra Kazhagam","wv":65589,"ws":34.3,"m":10245,"tv":191195,"nota":1060,"notas":0.55,"evm":64632,"post":957,"r2":"Indian National Congress","r2v":55344},{"n":226,"c":"PALAYAMKOTTAI","w":"M.ABDUL WAHAB","p":"Dravida Munnetra Kazhagam","wv":79744,"ws":44.15,"m":13805,"tv":180620,"nota":851,"notas":0.47,"evm":78293,"post":1451,"r2":"Tamilaga Vettri Kazhagam","r2v":65939},{"n":227,"c":"NANGUNERI","w":"REDDIARPATTI V. NARAYANAN","p":"Tamilaga Vettri Kazhagam","wv":74952,"ws":35.79,"m":16419,"tv":209419,"nota":721,"notas":0.34,"evm":74047,"post":905,"r2":"Indian National Congress","r2v":58533},{"n":228,"c":"RADHAPURAM","w":"DR.SATHISH CHRISTOPHER","p":"Tamilaga Vettri Kazhagam","wv":69947,"ws":34.99,"m":12313,"tv":199931,"nota":469,"notas":0.23,"evm":69400,"post":547,"r2":"Dravida Munnetra Kazhagam","r2v":57634},{"n":229,"c":"KANNIYAKUMARI","w":"THALAVAI SUNDARAM. N","p":"All India Anna Dravida Munnetra Kazhagam","wv":75045,"ws":31.38,"m":214,"tv":239150,"nota":825,"notas":0.34,"evm":73563,"post":1482,"r2":"Dravida Munnetra Kazhagam","r2v":74831},{"n":230,"c":"NAGERCOIL","w":"AUSTIN","p":"Dravida Munnetra Kazhagam","wv":69880,"ws":35.6,"m":7570,"tv":196280,"nota":447,"notas":0.23,"evm":68656,"post":1224,"r2":"Tamilaga Vettri Kazhagam","r2v":62310},{"n":231,"c":"COLACHAL","w":"THARAHAI CUTHBERT","p":"Indian National Congress","wv":66207,"ws":33.27,"m":2833,"tv":199013,"nota":581,"notas":0.29,"evm":65190,"post":1017,"r2":"Tamilaga Vettri Kazhagam","r2v":63374},{"n":232,"c":"PADMANABHAPURAM","w":"CHELLASWAMY. R","p":"Communist Party of India (Marxist)","wv":68938,"ws":38.18,"m":15569,"tv":180555,"nota":615,"notas":0.34,"evm":67896,"post":1042,"r2":"Tamilaga Vettri Kazhagam","r2v":53369},{"n":233,"c":"VILAVANCODE","w":"PRAVEEN T.T","p":"Indian National Congress","wv":70755,"ws":40.45,"m":20970,"tv":174927,"nota":828,"notas":0.47,"evm":69378,"post":1377,"r2":"Tamilaga Vettri Kazhagam","r2v":49785},{"n":234,"c":"KILLIYOOR","w":"RAJESH KUMAR. S","p":"Indian National Congress","wv":66434,"ws":37.42,"m":1311,"tv":177534,"nota":502,"notas":0.28,"evm":65354,"post":1080,"r2":"Tamilaga Vettri Kazhagam","r2v":65123}]
+;
+const PC={
+  'Tamilaga Vettri Kazhagam':'#7c3aed',
+  'Dravida Munnetra Kazhagam':'#dc2626',
+  'All India Anna Dravida Munnetra Kazhagam':'#16a34a',
+  'Naam Tamilar Katchi':'#ca8a04',
+  'Indian National Congress':'#2563eb',
+  'Bharatiya Janata Party':'#ea580c',
+  'Pattali Makkal Katchi':'#0891b2',
+  'Desiya Murpokku Dravida Kazhagam':'#7c2d12',
+  'Viduthalai Chiruthaigal Katchi':'#0f766e',
+  'Indian Union Muslim League':'#166534',
+  'Communist Party of India (Marxist)':'#b91c1c',
+  'Communist Party of India':'#991b1b',
+  'Amma Makkal Munnettra Kazagam':'#854d0e',
+  'Independent':'#475569'
+};
+const SH={
+  'Tamilaga Vettri Kazhagam':'TVK',
+  'Dravida Munnetra Kazhagam':'DMK',
+  'All India Anna Dravida Munnetra Kazhagam':'AIADMK',
+  'Naam Tamilar Katchi':'NTK',
+  'Indian National Congress':'INC',
+  'Bharatiya Janata Party':'BJP',
+  'Pattali Makkal Katchi':'PMK',
+  'Desiya Murpokku Dravida Kazhagam':'DMDK',
+  'Viduthalai Chiruthaigal Katchi':'VCK',
+  'Indian Union Muslim League':'IUML',
+  'Communist Party of India (Marxist)':'CPI(M)',
+  'Communist Party of India':'CPI',
+  'Amma Makkal Munnettra Kazagam':'AMMK',
+  'Independent':'IND'
+};
+const pc=p=>PC[p]||'#64748b';
+const sh=p=>SH[p]||p.slice(0,7);
+
+/* ----- party aggregates ----- */
+const pSeats={}, pVotes={};
+RAW.forEach(d=>{pSeats[d.p]=(pSeats[d.p]||0)+1; pVotes[d.p]=(pVotes[d.p]||0)+d.wv;});
+const bySeats=Object.entries(pSeats).sort((a,b)=>b[1]-a[1]);
+const byVotes=Object.entries(pVotes).sort((a,b)=>b[1]-a[1]).slice(0,9);
+
+/* ----- party filter ----- */
+const pf=document.getElementById('pf');
+bySeats.forEach(([p])=>{const o=document.createElement('option');o.value=p;o.textContent=sh(p)+' — '+p;pf.appendChild(o);});
+
+/* ----- scorecard ----- */
+const maxS=bySeats[0][1];
+const sl=document.getElementById('scoreList');
+bySeats.forEach(([p,s])=>{
+  const pct=(s/234*100).toFixed(1);
+  const row=document.createElement('div');
+  row.className='srow';
+  row.innerHTML='<div class="sdot" style="background:'+pc(p)+'"></div>'
+    +'<div class="sname" title="'+p+'">'+sh(p)+'</div>'
+    +'<div class="sbar-w"><div class="sbar" style="width:'+(s/maxS*100).toFixed(1)+'%;background:'+pc(p)+'"></div></div>'
+    +'<div class="sseats" style="color:'+pc(p)+'">'+s+'</div>';
+  sl.appendChild(row);
+});
+
+/* ----- donut chart ----- */
+new Chart(document.getElementById('cvDonut'),{
+  type:'doughnut',
+  data:{
+    labels:byVotes.map(([p])=>sh(p)),
+    datasets:[{data:byVotes.map(([,v])=>v),backgroundColor:byVotes.map(([p])=>pc(p)),borderWidth:1,borderColor:'#080c18'}]
+  },
+  options:{responsive:true,maintainAspectRatio:true,cutout:'62%',
+    plugins:{
+      legend:{position:'right',labels:{color:'#7a8fb0',font:{size:9},boxWidth:9,padding:5}},
+      tooltip:{callbacks:{label:c=>' '+sh(c.label)+': '+(c.raw/1e6).toFixed(2)+'M'}}
+    }
+  }
+});
+
+/* ----- seats bar ----- */
+new Chart(document.getElementById('cvSeats'),{
+  type:'bar',
+  data:{
+    labels:bySeats.map(([p])=>sh(p)),
+    datasets:[{label:'Seats',data:bySeats.map(([,s])=>s),backgroundColor:bySeats.map(([p])=>pc(p)),borderRadius:4,borderWidth:0}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw+' seats'}}},
+    scales:{
+      x:{ticks:{color:'#7a8fb0',font:{size:8.5}},grid:{color:'#111827'}},
+      y:{ticks:{color:'#7a8fb0',font:{size:8.5}},grid:{color:'#111827'},beginAtZero:true}
+    }
+  }
+});
+
+/* ----- margin chart ----- */
+let mChart=null;
+function drawMargin(mode){
+  const src=[...RAW].sort((a,b)=>mode==='top'?b.m-a.m:a.m-b.m).slice(0,10);
+  if(mChart)mChart.destroy();
+  mChart=new Chart(document.getElementById('cvMargin'),{
+    type:'bar',
+    data:{
+      labels:src.map(d=>d.c),
+      datasets:[{data:src.map(d=>d.m),backgroundColor:src.map(d=>pc(d.p)),borderRadius:3,borderWidth:0}]
+    },
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw.toLocaleString()+' votes margin'}}},
+      scales:{
+        x:{ticks:{color:'#7a8fb0',font:{size:8},callback:v=>v>=1000?Math.round(v/1000)+'K':v},grid:{color:'#111827'}},
+        y:{ticks:{color:'#c0cce0',font:{size:8}},grid:{display:false}}
+      }
+    }
+  });
+}
+drawMargin('top');
+window.switchM=function(m){
+  document.getElementById('tbH').className='tab'+(m==='top'?' on':'');
+  document.getElementById('tbL').className='tab'+(m==='low'?' on':'');
+  drawMargin(m);
+};
+
+/* ----- analysis chart (NOTA / postal / turnout) ----- */
+let aChart=null;
+function drawAnalysis(mode){
+  let src, label, color;
+  if(mode==='nota'){
+    src=[...RAW].sort((a,b)=>b.notas-a.notas).slice(0,10);
+    label='NOTA %'; color='#f59e0b';
+    src={labels:src.map(d=>d.c),data:src.map(d=>d.notas),label,color};
+  } else if(mode==='postal'){
+    const tmp=[...RAW].sort((a,b)=>(b.post/b.wv)-(a.post/a.wv)).slice(0,10);
+    src={labels:tmp.map(d=>d.c),data:tmp.map(d=>+((d.post/d.wv)*100).toFixed(2)),label:'Postal Vote %',color:'#38bdf8'};
+  } else {
+    const tmp=[...RAW].sort((a,b)=>b.tv-a.tv).slice(0,10);
+    src={labels:tmp.map(d=>d.c),data:tmp.map(d=>+(d.tv/1000).toFixed(1)),label:'Total Votes (K)',color:'#34d399'};
+  }
+  if(aChart)aChart.destroy();
+  aChart=new Chart(document.getElementById('cvAnalysis'),{
+    type:'bar',
+    data:{labels:src.labels,datasets:[{data:src.data,backgroundColor:src.color+'bb',borderRadius:3,borderWidth:0,label:src.label}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw+(mode==='turnout'?'K':' %')}}},
+      scales:{
+        x:{ticks:{color:'#7a8fb0',font:{size:8},callback:v=>mode==='turnout'?v+'K':v+'%'},grid:{color:'#111827'}},
+        y:{ticks:{color:'#c0cce0',font:{size:8}},grid:{display:false}}
+      }
+    }
+  });
+}
+drawAnalysis('nota');
+window.switchA=function(m){
+  ['tbN','tbP','tbT'].forEach((id,i)=>{
+    document.getElementById(id).className='tab'+(['nota','postal','turnout'][i]===m?' on':'');
+  });
+  drawAnalysis(m);
+};
+
+/* ----- results table ----- */
+let filtered=[...RAW], sKey='n', sDir=1;
+window.ST=function(k){if(sKey===k)sDir*=-1;else{sKey=k;sDir=1;}renderTable();};
+
+function renderTable(){
+  const body=document.getElementById('tbody');
+  const ct=document.getElementById('rcount');
+  const rows=[...filtered].sort((a,b)=>{
+    const av=a[sKey], bv=b[sKey];
+    if(typeof av==='string')return av.localeCompare(bv)*sDir;
+    return(av-bv)*sDir;
+  });
+  ct.textContent=rows.length+' seats';
+  body.innerHTML=rows.map(function(d){
+    var c=pc(d.p);
+    var wn=d.w.length>17?d.w.slice(0,16)+'…':d.w;
+    return '<tr>'
+      +'<td>'+d.n+'</td>'
+      +'<td title="'+d.c+'">'+d.c+'</td>'
+      +'<td title="'+d.w+'">'+wn+'</td>'
+      +'<td><span class="badge" style="background:'+c+'22;color:'+c+';border:1px solid '+c+'55">'+sh(d.p)+'</span></td>'
+      +'<td>'+d.wv.toLocaleString()+'</td>'
+      +'<td>'+d.ws+'%</td>'
+      +'<td>'+d.m.toLocaleString()+'</td>'
+      +'<td>'+d.nota.toLocaleString()+'</td>'
+      +'</tr>';
+  }).join('');
+}
+renderTable();
+
+function applyFilters(){
+  const s=document.getElementById('srch').value.toLowerCase();
+  const p=document.getElementById('pf').value;
+  const mfv=document.getElementById('mf').value;
+  filtered=RAW.filter(function(d){
+    if(s && !d.c.toLowerCase().includes(s) && !d.w.toLowerCase().includes(s))return false;
+    if(p && d.p!==p)return false;
+    if(mfv){var parts=mfv.split('-');var lo=+parts[0],hi=+parts[1];if(d.m<lo||d.m>hi)return false;}
+    return true;
+  });
+  renderTable();
+}
+document.getElementById('srch').addEventListener('input',applyFilters);
+document.getElementById('pf').addEventListener('change',applyFilters);
+document.getElementById('mf').addEventListener('change',applyFilters);
+</script>
+</body></html>
